@@ -23,35 +23,35 @@ public class StudentController {
     @GetMapping("/students")
     public ResponseEntity<List> getAllStudents() {
         List<Student> students = studentService.getAllStudent();
-        amqpTemplate.convertAndSend("get all students");
+        amqpTemplate.convertAndSend("students","get all students");
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
     @GetMapping("/students/{id}")
     public ResponseEntity<Student> getStudent(@PathVariable long id) {
         Student student = studentService.getStudent(id);
-        amqpTemplate.convertAndSend(student);
+        amqpTemplate.convertAndSend("students","call student " + student);
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
 
     @PostMapping("/students")
     public ResponseEntity<Student> addNewStudents(@RequestBody Student student) {
         studentService.saveOrUpdateStudent(student);
-        amqpTemplate.convertAndSend("student was created", student);
+        amqpTemplate.convertAndSend("students","student was created " + student);
         return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
 
     @PutMapping("/students")
     public ResponseEntity<Student> updateStudent(@RequestBody Student student) {
         studentService.saveOrUpdateStudent(student);
-        amqpTemplate.convertAndSend("student was update", student);
+        amqpTemplate.convertAndSend("students","student was update " + student);
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
 
     @DeleteMapping("/students/{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable long id) {
         studentService.deleteStudent(id);
-        amqpTemplate.convertAndSend("student with id =" + id + " was delete");
+        amqpTemplate.convertAndSend("students","student with id =" + id + " was delete");
         return new ResponseEntity<>(String.format("Student with ID = %d was deleted", id), HttpStatus.OK);
     }
 
@@ -67,6 +67,8 @@ public class StudentController {
                                                          @RequestBody Teacher teacher) {
         Student student = studentService.getStudent(id);
         student.addTeacherToStudent(teacher);
+//        updateStudent(student);
+        studentService.saveOrUpdateStudent(student);
         return new ResponseEntity<>("Teacher with id = " + teacher.getId()
                 + " was added", HttpStatus.OK);
     }

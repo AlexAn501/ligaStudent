@@ -28,12 +28,13 @@ public class Student {
     @Column(name = "course")
     private int course;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE
-            , CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinTable(
-            name = "student_teacher"
-            , joinColumns = @JoinColumn(name = "student_id")
-            , inverseJoinColumns = @JoinColumn(name = "teacher_id"))
+//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE
+//            , CascadeType.REFRESH, CascadeType.DETACH})
+//    @JoinTable(
+//            name = "student_teacher"
+//            , joinColumns = @JoinColumn(name = "student_id")
+//            , inverseJoinColumns = @JoinColumn(name = "teacher_id"))
+    @ManyToMany(mappedBy = "students")
     private List<Teacher> teachers;
 
 

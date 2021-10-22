@@ -14,9 +14,8 @@ import java.nio.charset.StandardCharsets;
 @Component
 @EnableRabbit
 @ConditionalOnBean(value = RabbitTemplate.class)
-public class MessagListener {
-
-    @RabbitListener(queues = "${application.broker.receive-queue}")
+public class TeacherListener {
+    @RabbitListener(queues = "teachers")
     public void onMessage(Message message){
         log.info(new String(message.getBody(), StandardCharsets.UTF_8));
     }

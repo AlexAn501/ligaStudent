@@ -28,8 +28,7 @@ public class Teacher {
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE
             , CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinTable(
-            name = "student_teacher"
+    @JoinTable(name = "student_teacher"
             , joinColumns = @JoinColumn(name = "teacher_id")
             , inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<Student> students;
