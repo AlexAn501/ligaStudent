@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.digitalleague.ligastudent.ligastudent.api.TeacherService;
+import ru.digitalleague.ligastudent.ligastudent.convertor.StudentConvertor;
+import ru.digitalleague.ligastudent.ligastudent.convertor.TeacherConvertor;
 import ru.digitalleague.ligastudent.ligastudent.dto.StudentDTO;
 import ru.digitalleague.ligastudent.ligastudent.dto.TeacherDTO;
 import ru.digitalleague.ligastudent.ligastudent.dto.TeacherWithStudentsDTO;
@@ -27,7 +29,7 @@ public class TeacherController {
     public ResponseEntity<List> getAllStudents() {
         List<TeacherDTO> teachersDTO = teacherService.getAllTeacher()
                 .stream()
-                .map(TeacherDTO::fromTeacher)
+                .map(TeacherConvertor::fromTeacher)
                 .collect(Collectors.toList());
 
         amqpTemplate.convertAndSend("teachers", "get all teachers");
@@ -37,7 +39,7 @@ public class TeacherController {
     @GetMapping("/teachers/{id}")
     public ResponseEntity<TeacherWithStudentsDTO> getTeacher(@PathVariable long id) {
         Teacher teacher = teacherService.getTeacher(id);
-        TeacherWithStudentsDTO teacherStudents = TeacherWithStudentsDTO.fromTeacher(teacher);
+        TeacherWithStudentsDTO teacherStudents = TeacherConvertor.fromTeacherWithStudents(teacher);
         amqpTemplate.convertAndSend("teachers", "call teacher " + teacher);
         return new ResponseEntity<>(teacherStudents, HttpStatus.OK);
     }
@@ -69,7 +71,7 @@ public class TeacherController {
         List<Student> teacherStudents = teacherService.getAllStudentsFromTeacher(id);
         List<StudentDTO> students = teacherStudents
                 .stream()
-                .map(StudentDTO::fromStudent)
+                .map(StudentConvertor::fromStudent)
                 .collect(Collectors.toList());
         amqpTemplate.convertAndSend("teachers", "Student ");
         return new ResponseEntity<>(students, HttpStatus.OK);

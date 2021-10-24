@@ -1,9 +1,5 @@
 package ru.digitalleague.ligastudent.ligastudent.dto;
 
-import ru.digitalleague.ligastudent.ligastudent.model.Student;
-import ru.digitalleague.ligastudent.ligastudent.model.Teacher;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentWithTeachersDTO {
@@ -14,25 +10,6 @@ public class StudentWithTeachersDTO {
     private String speciality;
     private int course;
     private List<TeacherDTO> teachers;
-
-
-    public static StudentWithTeachersDTO fromStudent(Student student){
-        StudentWithTeachersDTO dto = new StudentWithTeachersDTO();
-        dto.setStudentId(student.getStudentId());
-        dto.setName(student.getName());
-        dto.setMiddleName(student.getMiddleName());
-        dto.setLastName(student.getLastName());
-        dto.setSpeciality(student.getSpeciality());
-        dto.setCourse(student.getCourse());
-        List<TeacherDTO> teachers = new ArrayList<>();
-
-        for (Teacher teacher : student.getTeachers()) {
-            teachers.add(TeacherDTO.fromTeacher(teacher));
-        }
-        dto.setTeachers(teachers);
-
-        return dto;
-    }
 
 
     public List<TeacherDTO> getTeachers() {

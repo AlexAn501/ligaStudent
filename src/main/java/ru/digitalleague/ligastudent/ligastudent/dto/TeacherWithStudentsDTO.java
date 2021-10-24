@@ -1,9 +1,6 @@
 package ru.digitalleague.ligastudent.ligastudent.dto;
 
-import ru.digitalleague.ligastudent.ligastudent.model.Teacher;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TeacherWithStudentsDTO {
     private long id;
@@ -12,24 +9,6 @@ public class TeacherWithStudentsDTO {
     private String lastName;
     private String chair;
     private List<StudentDTO> students;
-
-
-    public static TeacherWithStudentsDTO fromTeacher(Teacher teacher){
-        TeacherWithStudentsDTO dto = new TeacherWithStudentsDTO();
-        dto.setId(teacher.getId());
-        dto.setName(teacher.getName());
-        dto.setMiddleName(teacher.getMiddleName());
-        dto.setLastName(teacher.getLastName());
-        dto.setChair(teacher.getChair());
-
-        List<StudentDTO> students = teacher.getStudents()
-                .stream()
-                .map(StudentDTO::fromStudent)
-                .collect(Collectors.toList());
-
-        dto.setStudents(students);
-        return dto;
-    }
 
 
     public List<StudentDTO> getStudents() {

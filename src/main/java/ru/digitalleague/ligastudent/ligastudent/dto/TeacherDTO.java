@@ -1,7 +1,5 @@
 package ru.digitalleague.ligastudent.ligastudent.dto;
 
-import ru.digitalleague.ligastudent.ligastudent.model.Teacher;
-
 public class TeacherDTO {
     private long id;
     private String name;
@@ -9,16 +7,6 @@ public class TeacherDTO {
     private String lastName;
     private String chair;
 
-    public static TeacherDTO fromTeacher(Teacher teacher){
-        TeacherDTO teacherDTO = new TeacherDTO();
-        teacherDTO.setId(teacher.getId());
-        teacherDTO.setName(teacher.getName());
-        teacherDTO.setMiddleName(teacher.getMiddleName());
-        teacherDTO.setLastName(teacher.getLastName());
-        teacherDTO.setChair(teacher.getChair());
-
-        return teacherDTO;
-    }
 
     public long getId() {
         return id;

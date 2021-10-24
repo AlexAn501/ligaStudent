@@ -1,7 +1,5 @@
 package ru.digitalleague.ligastudent.ligastudent.dto;
 
-import ru.digitalleague.ligastudent.ligastudent.model.Student;
-
 public class StudentDTO {
     private long studentId;
     private String name;
@@ -10,17 +8,6 @@ public class StudentDTO {
     private String speciality;
     private int course;
 
-    public static StudentDTO fromStudent(Student student){
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setStudentId(student.getStudentId());
-        studentDTO.setName(student.getName());
-        studentDTO.setMiddleName(student.getMiddleName());
-        studentDTO.setLastName(student.getLastName());
-        studentDTO.setSpeciality(student.getSpeciality());
-        studentDTO.setCourse(student.getCourse());
-
-        return studentDTO;
-    }
 
     public long getStudentId() {
         return studentId;

@@ -44,9 +44,6 @@ public class Student {
 
 
     public void addTeacherToStudent(Teacher teacher) {
-//        if (teachers == null) {
-//            teachers = new ArrayList<>();
-//        }
         teachers.add(teacher);
     }
 
