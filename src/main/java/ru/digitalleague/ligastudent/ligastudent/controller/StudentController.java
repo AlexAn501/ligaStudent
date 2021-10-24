@@ -79,7 +79,6 @@ public class StudentController {
                                                          @RequestBody Teacher teacher) {
         Student student = studentService.getStudent(id);
         student.addTeacherToStudent(teacher);
-//        updateStudent(student);
         studentService.saveOrUpdateStudent(student);
         return new ResponseEntity<>("Teacher with id = " + teacher.getId()
                 + " was added", HttpStatus.OK);

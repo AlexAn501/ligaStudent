@@ -13,7 +13,7 @@ public class StudentWithTeachersDTO {
     private String lastName;
     private String speciality;
     private int course;
-    private List<TeacherDTO> teacherDTOS;
+    private List<TeacherDTO> teachers;
 
 
     public static StudentWithTeachersDTO fromStudent(Student student){
@@ -29,18 +29,18 @@ public class StudentWithTeachersDTO {
         for (Teacher teacher : student.getTeachers()) {
             teachers.add(TeacherDTO.fromTeacher(teacher));
         }
-        dto.setTeacherDTOS(teachers);
+        dto.setTeachers(teachers);
 
         return dto;
     }
 
 
-    public List<TeacherDTO> getTeacherDTOS() {
-        return teacherDTOS;
+    public List<TeacherDTO> getTeachers() {
+        return teachers;
     }
 
-    public void setTeacherDTOS(List<TeacherDTO> teacherDTOS) {
-        this.teacherDTOS = teacherDTOS;
+    public void setTeachers(List<TeacherDTO> teachers) {
+        this.teachers = teachers;
     }
 
     public long getStudentId() {

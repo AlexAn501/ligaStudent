@@ -11,7 +11,7 @@ public class TeacherWithStudentsDTO {
     private String middleName;
     private String lastName;
     private String chair;
-    private List<StudentDTO> studentsDTO;
+    private List<StudentDTO> students;
 
 
     public static TeacherWithStudentsDTO fromTeacher(Teacher teacher){
@@ -27,17 +27,17 @@ public class TeacherWithStudentsDTO {
                 .map(StudentDTO::fromStudent)
                 .collect(Collectors.toList());
 
-        dto.setStudentsDTO(students);
+        dto.setStudents(students);
         return dto;
     }
 
 
-    public List<StudentDTO> getStudentsDTO() {
-        return studentsDTO;
+    public List<StudentDTO> getStudents() {
+        return students;
     }
 
-    public void setStudentsDTO(List<StudentDTO> studentsDTO) {
-        this.studentsDTO = studentsDTO;
+    public void setStudents(List<StudentDTO> students) {
+        this.students = students;
     }
 
     public long getId() {
