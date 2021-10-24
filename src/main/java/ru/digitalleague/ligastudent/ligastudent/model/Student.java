@@ -28,23 +28,11 @@ public class Student {
     @Column(name = "course")
     private int course;
 
-    //    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE
-//            , CascadeType.REFRESH, CascadeType.DETACH})
     @ManyToMany(mappedBy = "students")
-//    @JoinTable(
-//            name = "student_teacher"
-//            , joinColumns = @JoinColumn(name = "student_id")
-//            , inverseJoinColumns = @JoinColumn(name = "teacher_id"))
-
     private List<Teacher> teachers = new ArrayList<>();
 
 
     public Student() {
-    }
-
-
-    public void addTeacherToStudent(Teacher teacher) {
-        teachers.add(teacher);
     }
 
     public List<Teacher> getTeachers() {

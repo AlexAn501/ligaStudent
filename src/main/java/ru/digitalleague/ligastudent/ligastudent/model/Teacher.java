@@ -37,9 +37,14 @@ public class Teacher {
     public Teacher() {
     }
 
-
+    /**
+     * Сохраняет студента в списке студентов учителя.
+     * Сохраняет учителя в списке учителей студента.
+     * @param student 
+     */
     public void addStudentToTeacher(Student student) {
         students.add(student);
+        student.getTeachers().add(this);
     }
 
 
