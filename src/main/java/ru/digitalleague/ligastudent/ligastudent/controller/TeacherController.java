@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.digitalleague.ligastudent.ligastudent.api.TeacherService;
+import ru.digitalleague.ligastudent.ligastudent.dto.StudentDTO;
 import ru.digitalleague.ligastudent.ligastudent.dto.TeacherDTO;
 import ru.digitalleague.ligastudent.ligastudent.dto.TeacherWithStudentsDTO;
 import ru.digitalleague.ligastudent.ligastudent.model.Student;
@@ -64,9 +65,14 @@ public class TeacherController {
 
 
     @GetMapping("/teachers/students/{id}")
-    public ResponseEntity<List> getAllStudentsFromTacher(long id) {
+    public ResponseEntity<List> getAllStudentsFromTeacher(@PathVariable long id) {
         List<Student> teacherStudents = teacherService.getAllStudentsFromTeacher(id);
-        return new ResponseEntity<>(teacherStudents, HttpStatus.OK);
+        List<StudentDTO> students = teacherStudents
+                .stream()
+                .map(StudentDTO::fromStudent)
+                .collect(Collectors.toList());
+        amqpTemplate.convertAndSend("teachers", "Student ");
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
     @PostMapping("/teachers/students")

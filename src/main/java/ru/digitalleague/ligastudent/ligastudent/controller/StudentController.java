@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.digitalleague.ligastudent.ligastudent.api.StudentService;
 import ru.digitalleague.ligastudent.ligastudent.dto.StudentDTO;
 import ru.digitalleague.ligastudent.ligastudent.dto.StudentWithTeachersDTO;
+import ru.digitalleague.ligastudent.ligastudent.dto.TeacherDTO;
 import ru.digitalleague.ligastudent.ligastudent.model.Student;
 import ru.digitalleague.ligastudent.ligastudent.model.Teacher;
 
@@ -64,10 +65,13 @@ public class StudentController {
     }
 
     @GetMapping("/students/teachers/{id}")
-    public ResponseEntity<List> getAllTacherFromStudent(long id) {
+    public ResponseEntity<List> getAllTacherFromStudent(@PathVariable long id) {
         List<Teacher> studentTeachers = studentService.getAllTeacherFromStudent(id);
-
-        return new ResponseEntity<>(studentTeachers, HttpStatus.OK);
+        List<TeacherDTO> teachers = studentTeachers
+                .stream()
+                .map(TeacherDTO::fromTeacher)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(teachers, HttpStatus.OK);
     }
 
     @PostMapping("/students/teachers")
