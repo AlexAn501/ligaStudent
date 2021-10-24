@@ -6,10 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.digitalleague.ligastudent.ligastudent.api.TeacherService;
+import ru.digitalleague.ligastudent.ligastudent.dto.TeacherDTO;
+import ru.digitalleague.ligastudent.ligastudent.dto.TeacherWithStudentsDTO;
 import ru.digitalleague.ligastudent.ligastudent.model.Student;
 import ru.digitalleague.ligastudent.ligastudent.model.Teacher;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class TeacherController {
@@ -21,16 +24,21 @@ public class TeacherController {
 
     @GetMapping("/teachers")
     public ResponseEntity<List> getAllStudents() {
-        List<Teacher> teachers = teacherService.getAllTeacher();
+        List<TeacherDTO> teachersDTO = teacherService.getAllTeacher()
+                .stream()
+                .map(TeacherDTO::fromTeacher)
+                .collect(Collectors.toList());
+
         amqpTemplate.convertAndSend("teachers", "get all teachers");
-        return new ResponseEntity<>(teachers, HttpStatus.OK);
+        return new ResponseEntity<>(teachersDTO, HttpStatus.OK);
     }
 
     @GetMapping("/teachers/{id}")
-    public ResponseEntity<Teacher> getTeacher(@PathVariable long id) {
+    public ResponseEntity<TeacherWithStudentsDTO> getTeacher(@PathVariable long id) {
         Teacher teacher = teacherService.getTeacher(id);
+        TeacherWithStudentsDTO teacherStudents = TeacherWithStudentsDTO.fromTeacher(teacher);
         amqpTemplate.convertAndSend("teachers", "call teacher " + teacher);
-        return new ResponseEntity<>(teacher, HttpStatus.OK);
+        return new ResponseEntity<>(teacherStudents, HttpStatus.OK);
     }
 
     @PostMapping("/teachers")
@@ -47,7 +55,7 @@ public class TeacherController {
         return new ResponseEntity<>(teacher, HttpStatus.OK);
     }
 
-    @DeleteMapping("/teacher/{id}")
+    @DeleteMapping("/teachers/{id}")
     public ResponseEntity<String> deleteTeacher(@PathVariable long id) {
         teacherService.deleteTeacher(id);
         amqpTemplate.convertAndSend("teachers", "teacher with id =" + id + " was delete");
@@ -55,17 +63,18 @@ public class TeacherController {
     }
 
 
-    @GetMapping("/teachers-students/{id}")
+    @GetMapping("/teachers/students/{id}")
     public ResponseEntity<List> getAllStudentsFromTacher(long id) {
         List<Student> teacherStudents = teacherService.getAllStudentsFromTeacher(id);
         return new ResponseEntity<>(teacherStudents, HttpStatus.OK);
     }
 
-    @PostMapping("/teachers-students")
+    @PostMapping("/teachers/students")
     public ResponseEntity<String> addNewStudentToTeacher(@RequestHeader("teacher_id") long id,
                                                          @RequestBody Student student) {
         Teacher teacher = teacherService.getTeacher(id);
         teacher.addStudentToTeacher(student);
+        teacherService.saveOrUpdateTeacher(teacher);
         return new ResponseEntity<>("student with id = " + student.getStudentId()
                 + " was added", HttpStatus.OK);
     }

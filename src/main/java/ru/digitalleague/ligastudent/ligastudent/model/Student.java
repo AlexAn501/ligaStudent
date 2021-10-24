@@ -28,14 +28,14 @@ public class Student {
     @Column(name = "course")
     private int course;
 
-//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE
-//            , CascadeType.REFRESH, CascadeType.DETACH})
-//    @JoinTable(
-//            name = "student_teacher"
-//            , joinColumns = @JoinColumn(name = "student_id")
-//            , inverseJoinColumns = @JoinColumn(name = "teacher_id"))
-    @ManyToMany(mappedBy = "students")
-    private List<Teacher> teachers;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE
+            , CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(
+            name = "student_teacher"
+            , joinColumns = @JoinColumn(name = "student_id")
+            , inverseJoinColumns = @JoinColumn(name = "teacher_id"))
+//    @ManyToMany(mappedBy = "students")
+    private List<Teacher> teachers = new ArrayList<>();
 
 
     public Student() {
@@ -43,9 +43,9 @@ public class Student {
 
 
     public void addTeacherToStudent(Teacher teacher) {
-        if (teachers == null) {
-            teachers = new ArrayList<>();
-        }
+//        if (teachers == null) {
+//            teachers = new ArrayList<>();
+//        }
         teachers.add(teacher);
     }
 

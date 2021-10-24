@@ -31,7 +31,7 @@ public class Teacher {
     @JoinTable(name = "student_teacher"
             , joinColumns = @JoinColumn(name = "teacher_id")
             , inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private List<Student> students;
+    private List<Student> students = new ArrayList<>();
 
 
     public Teacher() {
@@ -39,9 +39,9 @@ public class Teacher {
 
 
     public void addStudentToTeacher(Student student) {
-        if (students == null) {
-            students = new ArrayList<>();
-        }
+//        if (students == null) {
+//            students = new ArrayList<>();
+//        }
         students.add(student);
     }
 
