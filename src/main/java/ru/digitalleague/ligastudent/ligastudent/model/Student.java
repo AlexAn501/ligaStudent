@@ -10,10 +10,10 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "student_id")
+    @Column(name = "id")
     private long studentId;
 
-    @Column(name = "name")
+    @Column(name = "first_name")
     private String name;
 
     @Column(name = "middle_name")
@@ -28,24 +28,59 @@ public class Student {
     @Column(name = "course")
     private int course;
 
+    @Column(name = "username")
+    private String login;
+
+    @Column(name = "password")
+    private String password;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Teacher> teachers = new ArrayList<>();
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE
             , CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinTable(
-            name = "student_teacher"
+    @JoinTable(name = "students_roles"
             , joinColumns = @JoinColumn(name = "student_id")
-            , inverseJoinColumns = @JoinColumn(name = "teacher_id"))
-    private List<Teacher> teachers;
+            , inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
 
 
     public Student() {
     }
 
 
-    public void addTeacherToStudent(Teacher teacher) {
-        if (teachers == null) {
-            teachers = new ArrayList<>();
-        }
-        teachers.add(teacher);
+    public void addRoleToStudent(Role role){
+        roles.add(role);
+        role.getStudents().add(this);
+    }
+
+    public void removeRoleToStudent(Role role){
+        roles.remove(role);
+        role.getStudents().remove(this);
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     public List<Teacher> getTeachers() {
