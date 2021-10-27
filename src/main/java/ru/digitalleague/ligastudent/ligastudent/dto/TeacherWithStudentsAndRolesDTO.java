@@ -2,31 +2,26 @@ package ru.digitalleague.ligastudent.ligastudent.dto;
 
 import java.util.List;
 
-public class TeacherWithStudentsDTO {
+public class TeacherWithStudentsAndRolesDTO {
     private long id;
     private String name;
     private String middleName;
     private String lastName;
     private String chair;
     private List<StudentDTO> students;
+    private List<RoleDTO> roles;
 
-    public TeacherWithStudentsDTO() {
+
+    public TeacherWithStudentsAndRolesDTO() {
     }
 
-    public TeacherWithStudentsDTO(TeacherDTO teacherDTO) {
-        this.id = teacherDTO.getId();
-        this.name = teacherDTO.getName();
-        this.middleName = teacherDTO.getMiddleName();
-        this.lastName = teacherDTO.getLastName();
-        this.chair = teacherDTO.getChair();
-    }
-
-    public List<StudentDTO> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<StudentDTO> students) {
-        this.students = students;
+    public TeacherWithStudentsAndRolesDTO(TeacherWithStudentsDTO dto) {
+        this.id = dto.getId();
+        this.name = dto.getName();
+        this.middleName = dto.getMiddleName();
+        this.lastName = dto.getLastName();
+        this.chair = dto.getChair();
+        this.students = dto.getStudents();
     }
 
     public long getId() {
@@ -67,5 +62,21 @@ public class TeacherWithStudentsDTO {
 
     public void setChair(String chair) {
         this.chair = chair;
+    }
+
+    public List<StudentDTO> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<StudentDTO> students) {
+        this.students = students;
+    }
+
+    public List<RoleDTO> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleDTO> roles) {
+        this.roles = roles;
     }
 }

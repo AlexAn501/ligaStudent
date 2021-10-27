@@ -10,6 +10,7 @@ import ru.digitalleague.ligastudent.ligastudent.api.TeacherService;
 import ru.digitalleague.ligastudent.ligastudent.convertor.StudentConvertor;
 import ru.digitalleague.ligastudent.ligastudent.convertor.TeacherConvertor;
 import ru.digitalleague.ligastudent.ligastudent.dto.StudentDTO;
+import ru.digitalleague.ligastudent.ligastudent.dto.StudentWithTeachersAndRolesDTO;
 import ru.digitalleague.ligastudent.ligastudent.dto.StudentWithTeachersDTO;
 import ru.digitalleague.ligastudent.ligastudent.dto.TeacherDTO;
 import ru.digitalleague.ligastudent.ligastudent.model.Student;
@@ -18,6 +19,7 @@ import ru.digitalleague.ligastudent.ligastudent.model.Teacher;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequestMapping("/students")
 @RestController
 public class StudentController {
 
@@ -30,7 +32,7 @@ public class StudentController {
     @Autowired
     private AmqpTemplate amqpTemplate;
 
-    @GetMapping("/students")
+    @GetMapping()
     public ResponseEntity<List> getAllStudents() {
         List<StudentDTO> studentsDTO = studentService.getAllStudent()
                 .stream()
@@ -40,7 +42,7 @@ public class StudentController {
         return new ResponseEntity<>(studentsDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/students/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<StudentWithTeachersDTO> getStudent(@PathVariable long id) {
         Student student = studentService.getStudent(id);
         StudentWithTeachersDTO studentTeachers = StudentConvertor.fromStudentWithTeachers(student);
@@ -48,14 +50,22 @@ public class StudentController {
         return new ResponseEntity<>(studentTeachers, HttpStatus.OK);
     }
 
-    @PostMapping("/students")
+    @GetMapping("/roles/{id}")
+    public ResponseEntity<StudentWithTeachersAndRolesDTO> getStudentWithRole(@PathVariable long id){
+        Student student = studentService.getStudent(id);
+        StudentWithTeachersAndRolesDTO studentRoles = StudentConvertor.fromStudentWithTeacherAndRoles(student);
+        amqpTemplate.convertAndSend("students","Get teacher and roles teacher " + student);
+        return new ResponseEntity<>(studentRoles,HttpStatus.OK);
+    }
+
+    @PostMapping()
     public ResponseEntity<Student> addNewStudents(@RequestBody Student student) {
         studentService.saveOrUpdateStudent(student);
         amqpTemplate.convertAndSend("students", "Student was created " + student);
         return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
 
-    @PutMapping("/students")
+    @PutMapping()
     public ResponseEntity<Student> updateStudent(@RequestBody Student student) {
         studentService.saveOrUpdateStudent(student);
         amqpTemplate.convertAndSend("students",
@@ -63,14 +73,14 @@ public class StudentController {
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
 
-    @DeleteMapping("/students/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteStudent(@PathVariable long id) {
         studentService.deleteStudent(id);
         amqpTemplate.convertAndSend("students", "Student with ID = " + id + " was delete");
         return new ResponseEntity<>(String.format("Student with ID = %d was deleted", id), HttpStatus.OK);
     }
 
-    @GetMapping("/students/teachers/{id}")
+    @GetMapping("/teachers/{id}")
     public ResponseEntity<List> getAllTacherFromStudent(@PathVariable long id) {
         List<Teacher> studentTeachers = studentService.getAllTeacherFromStudent(id);
         List<TeacherDTO> teachers = studentTeachers
@@ -81,7 +91,7 @@ public class StudentController {
         return new ResponseEntity<>(teachers, HttpStatus.OK);
     }
 
-    @PostMapping("/students/teachers")
+    @PostMapping("/teachers")
     public ResponseEntity<String> addNewStudentToTeacher(@RequestHeader("student_id") long id,
                                                          @RequestBody Teacher teacher) {
         Student student = studentService.getStudent(id);

@@ -10,10 +10,10 @@ public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "teacher_id")
+    @Column(name = "id")
     private long id;
 
-    @Column(name = "name")
+    @Column(name = "first_name")
     private String name;
 
     @Column(name = "middle_name")
@@ -33,6 +33,13 @@ public class Teacher {
             , inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<Student> students = new ArrayList<>();
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE
+            , CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(name = "teachers_roles"
+            , joinColumns = @JoinColumn(name = "teacher_id")
+            , inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
+
 
     public Teacher() {
     }
@@ -40,13 +47,32 @@ public class Teacher {
     /**
      * Сохраняет студента в списке студентов учителя.
      * Сохраняет учителя в списке учителей студента.
-     * @param student 
+     *
+     * @param student
      */
     public void addStudentToTeacher(Student student) {
         students.add(student);
         student.getTeachers().add(this);
     }
 
+    public void addRoleToTeacher(Role role){
+        roles.add(role);
+        role.getTeachers().add(this);
+    }
+
+    public void removeRoleToTeacher(Role role){
+        roles.remove(role);
+        role.getTeachers().remove(this);
+    }
+
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 
     public long getId() {
         return id;

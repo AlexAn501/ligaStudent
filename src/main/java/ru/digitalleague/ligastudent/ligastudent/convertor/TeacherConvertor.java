@@ -1,8 +1,6 @@
 package ru.digitalleague.ligastudent.ligastudent.convertor;
 
-import ru.digitalleague.ligastudent.ligastudent.dto.StudentDTO;
-import ru.digitalleague.ligastudent.ligastudent.dto.TeacherDTO;
-import ru.digitalleague.ligastudent.ligastudent.dto.TeacherWithStudentsDTO;
+import ru.digitalleague.ligastudent.ligastudent.dto.*;
 import ru.digitalleague.ligastudent.ligastudent.model.Teacher;
 
 import java.util.List;
@@ -22,12 +20,8 @@ public class TeacherConvertor {
     }
 
     public static TeacherWithStudentsDTO fromTeacherWithStudents(Teacher teacher){
-        TeacherWithStudentsDTO dto = new TeacherWithStudentsDTO();
-        dto.setId(teacher.getId());
-        dto.setName(teacher.getName());
-        dto.setMiddleName(teacher.getMiddleName());
-        dto.setLastName(teacher.getLastName());
-        dto.setChair(teacher.getChair());
+        TeacherDTO teacherDTO = fromTeacher(teacher);
+        TeacherWithStudentsDTO dto = new TeacherWithStudentsDTO(teacherDTO);
 
         List<StudentDTO> students = teacher.getStudents()
                 .stream()
@@ -35,6 +29,18 @@ public class TeacherConvertor {
                 .collect(Collectors.toList());
 
         dto.setStudents(students);
+        return dto;
+    }
+
+    public static TeacherWithStudentsAndRolesDTO fromTeacherWithStudentsAndRoles(Teacher teacher){
+        TeacherWithStudentsDTO teacherStudents = fromTeacherWithStudents(teacher);
+        TeacherWithStudentsAndRolesDTO dto = new TeacherWithStudentsAndRolesDTO(teacherStudents);
+
+        List<RoleDTO> roles = teacher.getRoles()
+                .stream()
+                .map(RoleConvertor::fromRole)
+                .collect(Collectors.toList());
+        dto.setRoles(roles);
         return dto;
     }
 }

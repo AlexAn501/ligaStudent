@@ -2,7 +2,7 @@ package ru.digitalleague.ligastudent.ligastudent.dto;
 
 import java.util.List;
 
-public class StudentWithTeachersDTO {
+public class StudentWithTeachersAndRolesDTO {
     private long studentId;
     private String name;
     private String middleName;
@@ -11,18 +11,29 @@ public class StudentWithTeachersDTO {
     private int course;
     private String login;
     private List<TeacherDTO> teachers;
+    private List<RoleDTO> roles;
 
-    public StudentWithTeachersDTO() {
+
+    public StudentWithTeachersAndRolesDTO() {
     }
 
-    public StudentWithTeachersDTO(StudentDTO studentDTO) {
-        this.studentId = studentDTO.getStudentId();
-        this.name = studentDTO.getName();
-        this.middleName = studentDTO.getMiddleName();
-        this.lastName = studentDTO.getLastName();
-        this.speciality = studentDTO.getSpeciality();
-        this.course = studentDTO.getCourse();
-        this.login = studentDTO.getLogin();
+    public StudentWithTeachersAndRolesDTO(StudentWithTeachersDTO dto) {
+        this.studentId = dto.getStudentId();
+        this.name = dto.getName();
+        this.middleName = dto.getMiddleName();
+        this.lastName = dto.getLastName();
+        this.speciality = dto.getSpeciality();
+        this.course = dto.getCourse();
+        this.login = dto.getLogin();
+        this.teachers = dto.getTeachers();
+    }
+
+    public List<RoleDTO> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleDTO> roles) {
+        this.roles = roles;
     }
 
     public String getLogin() {
